@@ -34,4 +34,5 @@
                                                          (vector x y))
                                                        (shuffle)
                                                        (first))
-     :else [2,2])))
+     (not (board/occupied? board 2 2)) [2 2]
+     :else (first (clojure.set/difference (set (for [x (range 1 4) y (range 1 4)] (vector x y))) (clojure.set/union (piece-locations board piece) (piece-locations board (other-piece piece))))))))

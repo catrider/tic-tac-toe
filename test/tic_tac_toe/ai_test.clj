@@ -13,6 +13,10 @@
     (is (= [2 2] (ai/next-move [[:o :e :e]
                                 [:e :e :e]
                                 [:e :e :e]] :x))))
+  (testing "next move is not the center if it is occupied"
+    (is (not= [2 2] (ai/next-move [[:e :e :e]
+                                   [:e :o :e]
+                                   [:e :e :e]] :x))))
   (testing "next move completes a winner"
     (testing "horizontal winner"
       (let [board [[:x :e :x]

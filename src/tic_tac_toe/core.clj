@@ -1,7 +1,8 @@
 (ns tic-tac-toe.core
   (:require [tic-tac-toe.game :as game]
             [tic-tac-toe.board :as board]
-            [tic-tac-toe.printer :as printer]))
+            [tic-tac-toe.printer :as printer]
+            [tic-tac-toe.ai :as ai]))
 
 
 (defn parse-loc [loc]
@@ -23,8 +24,10 @@
         (println (printer/print board))
         (println (printer/piece-to-char piece-up) "is up")
         (println "Play your piece: ")
-        (let [loc (first (line-seq (java.io.BufferedReader. *in*)))
-              [x,y] (parse-loc loc)
+        (let [[x,y] (if (= :x piece-up)
+                      (parse-loc (first (line-seq (java.io.BufferedReader. *in*))))
+                      (ai/next-move board piece-up))
+              
               new-board (if (board/occupied? board x y)
                           (do
                             (println (str "Location (" x "," y ") is already occupied."))
