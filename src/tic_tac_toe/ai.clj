@@ -1,5 +1,6 @@
 (ns tic-tac-toe.ai
   (:require [tic-tac-toe.board :as board]
+            [tic-tac-toe.game :as game]
             [clojure.set]))
 
 (defn other-piece [piece]
@@ -14,25 +15,16 @@
        (map (fn [itm] (vector (:x itm) (:y itm))))
        (set)))
 
-(defn missing-piece [pieces]
-  (if (apply = (map first pieces))
-    (vector (ffirst pieces) (first (clojure.set/difference #{1 2 3} (set (map second pieces)))))
-    (vector (first (clojure.set/difference #{1 2 3} (set (map first pieces)))) (second (first pieces)))))
-
 (defn winning-move [board piece]
-  (let [played (map #(conj % piece) (piece-locations board piece)) 
-        played-rows (vals (group-by first played))
-        played-columns (vals (group-by second played))
-        rows-to-win (filter #(= 2 (count %)) played-rows)
-        columns-to-win (filter #(= 2 (count %)) played-columns)]
-    (cond
-     (> 0 (count rows-to-win)) (missing-piece (first rows-to-win))
-     (> 0 (count columns-to-win)) (missing-piece (first columns-to-win))
-     :else nil)))
+  (->> (clojure.set/union (piece-locations board piece) (piece-locations board (other-piece piece)))
+       (clojure.set/difference (set (for [x (range 1 4)
+                                          y (range 1 4)]
+                                      (vector x y))))
+       (filter #(= piece (game/winner? (board/insert board (first %) (second %) piece))))
+       (first)))
 
 (defn next-move [board piece]
   (let [my-played (piece-locations board piece)
-
         his-played (piece-locations board (other-piece piece))]
     (cond
      (not= nil (winning-move board piece)) (winning-move board piece) 

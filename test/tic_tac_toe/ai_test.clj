@@ -15,9 +15,9 @@
                                 [:e :e :e]] :x))))
   (testing "next move completes a winner"
     (testing "horizontal winner"
-      (let [board [[:x :e :x
-                    :o :e :o
-                    :x :e :e]]]
+      (let [board [[:x :e :x]
+                   [:o :e :o]
+                   [:o :e :e]]]
         (is (= [1 2] (ai/next-move board :x)))))
     (testing "vertical winner"
       (let [board [[:e :e :x]
