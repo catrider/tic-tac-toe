@@ -32,7 +32,27 @@
       (let [board [[:o :e :x]
                    [:e :x :o]
                    [:e :o :o]]]
-        (is (= [3 1] (ai/next-move board :x)))))))
+        (is (= [3 1] (ai/next-move board :x))))))
+  (testing "next moves prevents a winner for the opponent"
+    (testing "horizontal winner"
+      (let [board [[:x :e :x]
+                   [:o :e :o]
+                   [:o :e :e]]]
+        (is (= [1 2] (ai/next-move board :x)))))
+    (testing "vertical winner"
+      (let [board [[:e :e :x]
+                   [:x :o :e]
+                   [:o :x :x]]]
+        (is (= [2 3] (ai/next-move board :o)))))
+    (testing "diagonal winner"
+      (let [board [[:x :e :o]
+                   [:o :x :e]
+                   [:o :e :e]]]
+        (is (= [3 3] (ai/next-move board :o))))
+      (let [board [[:o :e :x]
+                   [:e :x :o]
+                   [:e :o :e]]]
+        (is (= [3 1] (ai/next-move board :o)))))))
 
 (deftest piece-locations-test
   (testing "it works"

@@ -27,7 +27,8 @@
   (let [my-played (piece-locations board piece)
         his-played (piece-locations board (other-piece piece))]
     (cond
-     (not= nil (winning-move board piece)) (winning-move board piece) 
+     (not= nil (winning-move board piece)) (winning-move board piece)
+     (not= nil (winning-move board (other-piece piece))) (winning-move board (other-piece piece))
      (and (empty? my-played) (empty? his-played)) (->> (for [x [1 3]
                                                              y [1 3]]
                                                          (vector x y))
