@@ -9,13 +9,18 @@
 (defn parse-loc [loc]
   (map (comp #(Integer/parseInt %) clojure.string/trim) (clojure.string/split loc #",")))
 
+(defn random-piece []
+  (->> (list :x :o)
+       (shuffle)
+       (first)))
+
 (defn start []
   (let [initial-board [[:e :e :e]
                       [:e :e :e]
                       [:e :e :e]]]
     (println "Tic-Tac-Toe!")
     (loop [board initial-board
-           piece-up :o
+           piece-up (random-piece)
            winner :undecided]
       (do
         (println (printer/print board))
