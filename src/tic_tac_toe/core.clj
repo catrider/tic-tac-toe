@@ -43,6 +43,9 @@
            (or (= new-winner :x) (= new-winner :o)) (do
                                                       (println (printer/print new-board))
                                                       (println (printer/piece-to-char piece-up) "wins!"))
-           (board/filled? new-board) (do
-                                       (println "\nDraw!"))
-           :else (recur new-board new-piece-up new-winner)))))))
+           (board/filled? new-board) (println "\nDraw!")
+           :else (recur new-board new-piece-up new-winner)))))
+    (println "Play again? (y/n): ")
+    (let [answer (first (line-seq (java.io.BufferedReader. *in*)))]
+      (if (= "y" answer)
+        (recur)))))
