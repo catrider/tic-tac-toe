@@ -1,5 +1,9 @@
 (ns tic-tac-toe.board)
 
+(defn filled? [board]
+  (->> (flatten board)
+       (every? #(not (= :e %)))))
+
 (defn occupied? [board x y]
   {:pre [(and (>= x 1) (<= x 3) (>= y 1) (<= y 3))]}
   (not= :e (get (get board (dec x)) (dec y))))

@@ -39,8 +39,10 @@
                              piece-up
                              (piece/other piece-up))
               new-winner (game/winner? new-board)]
-          (if (or (= new-winner :x) (= new-winner :o))
-            (do
-              (println (printer/print new-board))
-              (println (printer/piece-to-char piece-up) "wins!"))
-            (recur new-board new-piece-up new-winner)))))))
+          (cond 
+           (or (= new-winner :x) (= new-winner :o)) (do
+                                                      (println (printer/print new-board))
+                                                      (println (printer/piece-to-char piece-up) "wins!"))
+           (board/filled? new-board) (do
+                                       (println "\nDraw!"))
+           :else (recur new-board new-piece-up new-winner)))))))

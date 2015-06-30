@@ -51,3 +51,14 @@
     (is (thrown? AssertionError (board/occupied? [[] [] []] 2 0))))
   (testing "throws an AssertionError if the y coordinate is greater than 3"
     (is (thrown? AssertionError (board/occupied? [[] [] []] 2 4)))))
+
+(deftest filled-test
+  (testing "it works"
+    (let [board [[:x :o :x]
+                 [:o :x :x]
+                 [:o :x :o]]]
+      (is (= true (board/filled? board))))
+    (let [board [[:x :o :x]
+                 [:o :x :e]
+                 [:o :x :o]]]
+      (is (= false (board/filled? board))))))
