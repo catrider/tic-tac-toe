@@ -20,16 +20,24 @@
        (filter #(= piece (game/winner? (board/insert board (first %) (second %) piece))))
        (first)))
 
+(defn random-corner []
+  (->> (for [x [1 3]
+             y [1 3]]
+         (vector x y))
+       (shuffle)
+       (first)))
+
+(defn random-remaining-location [board]
+  (first (clojure.set/difference (set (for [x (range 1 4) y (range 1 4)] (vector x y))) (clojure.set/union (piece-locations board :x) (piece-locations board :o)))))
+
 (defn next-move [board piece]
   (let [my-played (piece-locations board piece)
-        his-played (piece-locations board (piece/other piece))]
+        his-played (piece-locations board (piece/other piece))
+        my-winning-move (winning-move board piece)
+        his-winning-move (winning-move board (piece/other piece))]
     (cond
-     (not= nil (winning-move board piece)) (winning-move board piece)
-     (not= nil (winning-move board (piece/other piece))) (winning-move board (piece/other piece))
-     (and (empty? my-played) (empty? his-played)) (->> (for [x [1 3]
-                                                             y [1 3]]
-                                                         (vector x y))
-                                                       (shuffle)
-                                                       (first))
+     (not= nil my-winning-move) my-winning-move
+     (not= nil his-winning-move) his-winning-move
+     (and (empty? my-played) (empty? his-played)) (random-corner)
      (not (board/occupied? board 2 2)) [2 2]
-     :else (first (clojure.set/difference (set (for [x (range 1 4) y (range 1 4)] (vector x y))) (clojure.set/union (piece-locations board piece) (piece-locations board (piece/other piece))))))))
+     :else (random-remaining-location board))))
