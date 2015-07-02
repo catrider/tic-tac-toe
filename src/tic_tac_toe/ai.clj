@@ -36,8 +36,8 @@
         my-winning-move (winning-move board piece)
         his-winning-move (winning-move board (piece/other piece))]
     (cond
-     (not= nil my-winning-move) my-winning-move
-     (not= nil his-winning-move) his-winning-move
+     (not (nil? my-winning-move)) my-winning-move
+     (not (nil? his-winning-move)) his-winning-move
      (and (empty? my-played) (empty? his-played)) (random-corner)
-     (not (board/occupied? board 2 2)) [2 2]
+     (and (= 1 (count his-played)) (= 0 (count my-played)) (not (board/occupied? board 2 2))) [2 2]
      :else (random-remaining-location board))))
