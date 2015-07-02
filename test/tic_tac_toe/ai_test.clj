@@ -1,14 +1,14 @@
 (ns tic-tac-toe.ai-test
   (:require [tic-tac-toe.ai :as ai]
+            [tic-tac-toe.logic-utils :as lu]
             [clojure.test :refer :all]))
 
 (deftest next-move-test
   (testing "next move is one of the four corners"
-    (let [possible-next-moves [[1 1] [1 3] [3 1] [3 3]]
-          next-move (ai/next-move [[:e :e :e]
+    (let [next-move (ai/next-move [[:e :e :e]
                                    [:e :e :e]
                                    [:e :e :e]] :x)]
-      (is (reduce #(or %1 %2) (map #(= % next-move) possible-next-moves)))))
+      (is (lu/or= next-move [1 1] [1 3] [3 1] [3 3]))))
   (testing "next move is the center if the one of the corners is occupied and only one piece is on the board"
     (is (= [2 2] (ai/next-move [[:o :e :e]
                                 [:e :e :e]
@@ -56,7 +56,20 @@
       (let [board [[:o :e :x]
                    [:e :x :o]
                    [:e :o :e]]]
-        (is (= [3 1] (ai/next-move board :o)))))))
+        (is (= [3 1] (ai/next-move board :o))))))
+  (testing "next move intelligently plays a corner for non game ending plays"
+    (let [board [[:o :e :e]
+                 [:e :x :e]
+                 [:e :e :e]]]
+      (is (lu/or= (ai/next-move board :o) [3 1] [1 3])))
+    (let [board [[:o :e :e]
+                 [:x :e :e]
+                 [:e :e :e]]]
+      (is (= (ai/next-move board :o) [1 3])))
+    (let [board [[:x :e :e]
+                 [:o :e :e]
+                 [:x :o :e]]]
+      (is (lu/or= (ai/next-move board :x) [2 2] [1 3])))))
 
 (deftest piece-locations-test
   (testing "it works"
