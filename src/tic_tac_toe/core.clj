@@ -25,7 +25,7 @@
       (do
         (println (printer/print board))
         (println (printer/piece-to-char piece-up) "is up")
-        (println "Play your piece: ")
+        (println "Play your piece <\"x,y\">: ")
         (let [[x,y] (if (= :x piece-up)
                       (parse-loc (first (line-seq (java.io.BufferedReader. *in*))))
                       (ai/next-move board piece-up))
