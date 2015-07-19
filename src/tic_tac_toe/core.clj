@@ -5,9 +5,20 @@
             [tic-tac-toe.printer :as printer]
             [tic-tac-toe.ai :as ai]))
 
-
 (defn parse-loc [loc]
   (map (comp #(Integer/parseInt %) clojure.string/trim) (clojure.string/split loc #",")))
+
+(defn read-location-input []
+  (try 
+    (println "Play your piece <\"x,y\">: ")
+    (let [[x y :as loc] (doall (parse-loc (first (line-seq (java.io.BufferedReader. *in*)))))]
+      (if (or (< x 1) (> x 3) (< y 1) (> y 3))
+        (throw (Exception. ""))
+        loc)) 
+    (catch Throwable e
+      (do
+        (println "Location must be of form 'x,y', x and y being numbers 1-3")
+        (read-location-input)))))
 
 (defn random-piece []
   (->> (list :x :o)
@@ -24,10 +35,9 @@
            winner :undecided]
       (do
         (println (printer/print board))
-        (println (printer/piece-to-char piece-up) "is up")
-        (println "Play your piece <\"x,y\">: ")
+        (println (printer/piece-to-char piece-up) "is up") 
         (let [[x,y] (if (= :x piece-up)
-                      (parse-loc (first (line-seq (java.io.BufferedReader. *in*))))
+                      (read-location-input)
                       (ai/next-move board piece-up))
               
               new-board (if (board/occupied? board x y)
