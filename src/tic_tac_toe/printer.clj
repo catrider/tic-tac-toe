@@ -12,6 +12,6 @@
                       (interpose \|)
                       (interpose \space)) " \n")))
 
-(defn print [board]
+(defn print-board [board]
   {:pre [(and (= 3 (count board)) (every? #(= 3 (count %)) board))]}
   (apply str (interpose (str "---|---|---" \newline) (map row-to-str board))))

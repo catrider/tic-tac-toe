@@ -62,7 +62,7 @@
                  [:e :x :e]
                  [:e :e :e]]
           next-move (ai/next-move board :o)]
-      (do (println next-move) (is (lu/or= next-move [3 1] [1 3]))))
+      (is (lu/or= next-move [3 1] [1 3])))
     (let [board [[:o :e :e]
                  [:x :e :e]
                  [:e :e :e]]]

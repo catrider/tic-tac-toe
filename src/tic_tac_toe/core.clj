@@ -34,7 +34,7 @@
            piece-up (random-piece)
            winner :undecided]
       (do
-        (println (printer/print board))
+        (println (printer/print-board board))
         (println (printer/piece-to-char piece-up) "is up") 
         (let [[x,y] (if (= :x piece-up)
                       (read-location-input)
@@ -51,7 +51,7 @@
               new-winner (game/winner? new-board)]
           (cond 
            (or (= new-winner :x) (= new-winner :o)) (do
-                                                      (println (printer/print new-board))
+                                                      (println (printer/print-board new-board))
                                                       (println (printer/piece-to-char piece-up) "wins!"))
            (board/filled? new-board) (println "\nDraw!")
            :else (recur new-board new-piece-up new-winner)))))

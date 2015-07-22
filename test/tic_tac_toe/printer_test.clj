@@ -2,12 +2,12 @@
   (:require [clojure.test :refer :all]
             [tic-tac-toe.printer :refer :all]))
 
-(deftest print-test
+(deftest print-board-test
   (testing "prints the board"
     (let [board [[:o :x :e]
                  [:e :o :e]
                  [:x :o :x]]]
-      (is (= (print board) (str " o | x |   " \newline
+      (is (= (print-board board) (str " o | x |   " \newline
                                 "---|---|---" \newline
                                 "   | o |   " \newline
                                 "---|---|---" \newline
@@ -15,7 +15,7 @@
   (testing "throws an AssertionError if the vector isn't 3x3"
     (let [board [[:o :x :e]
                  [:e :o :e]]]
-      (is (thrown? AssertionError (print board))))))
+      (is (thrown? AssertionError (print-board board))))))
 
 (deftest row-to-str-test
   (testing "returns the correct row str"
