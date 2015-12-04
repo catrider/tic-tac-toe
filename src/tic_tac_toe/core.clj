@@ -48,7 +48,7 @@
               new-piece-up (if (= new-board board)
                              piece-up
                              (piece/other piece-up))
-              new-winner (game/winner? new-board)]
+              new-winner (game/winner new-board)]
           (cond 
            (or (= new-winner :x) (= new-winner :o)) (do
                                                       (println (printer/print-board new-board))

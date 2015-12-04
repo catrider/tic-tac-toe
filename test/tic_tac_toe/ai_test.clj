@@ -83,7 +83,12 @@
     (let [board [[:o :x :o]
                  [:e :x :e]
                  [:e :o :x]]]
-      (is (lu/or= (ai/next-move board :o) [2 1] [3 1])))))
+      (is (lu/or= (ai/next-move board :o) [2 1] [3 1]))))
+  (testing "favors move that sets up two winners over move that sets up one winner"
+    (let [board [[:o :e :x]
+                 [:x :e :e]
+                 [:o :e :e]]]
+      (is (= (ai/next-move board :o) [3 3])))))
 
 (deftest piece-locations-test
   (testing "it works"

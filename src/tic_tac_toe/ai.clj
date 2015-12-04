@@ -13,12 +13,18 @@
        (map (fn [itm] (vector (:x itm) (:y itm))))
        (set)))
 
+(def all-locations
+  (set (for [x (range 1 4)
+             y (range 1 4)]
+         (vector x y))))
+
+(defn occupied-locations [board]
+  (clojure.set/union (piece-locations board :o) (piece-locations board :x)))
+
 (defn winning-move [board piece]
-  (->> (clojure.set/union (piece-locations board piece) (piece-locations board (piece/other piece)))
-       (clojure.set/difference (set (for [x (range 1 4)
-                                          y (range 1 4)]
-                                      (vector x y))))
-       (filter #(= piece (game/winner? (board/insert board (first %) (second %) piece))))
+  (->> (occupied-locations board)
+       (clojure.set/difference all-locations)
+       (filter #(= piece (game/winner (board/insert board (first %) (second %) piece))))
        (first)))
 
 (def corners 
@@ -30,7 +36,7 @@
   (first (shuffle corners)))
 
 (defn random-remaining-location [board]
-  (first (clojure.set/difference (set (for [x (range 1 4) y (range 1 4)] (vector x y))) (clojure.set/union (piece-locations board :x) (piece-locations board :o)))))
+  (first (clojure.set/difference all-locations (occupied-locations board))))
 
 (defn is-1-or-3? [val]
   (lu/or= val 1 3))
