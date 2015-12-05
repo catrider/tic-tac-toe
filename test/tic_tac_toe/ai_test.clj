@@ -168,3 +168,36 @@
                  [:x :e :e]
                  [:x :o :e]]]
       (is (= [2 2] (ai/winning-move board :x))))))
+
+(deftest winning-moves-test
+  (testing "zero winning moves"
+    (testing "empty board"
+      (let [board [[:e :e :e]
+                   [:e :e :e]
+                   [:e :e :e]]]
+        (is (= #{} (ai/winning-moves board :o)))))
+    (testing "singel piece"
+      (let [board [[:e :e :e]
+                   [:e :x :e]
+                   [:e :e :e]]]
+        (is (= #{} (ai/winning-moves board :o)))))
+    (testing "not empty board"
+      (let [board [[:x :o :e]
+                   [:o :o :x]
+                   [:x :x :o]]]
+        (is (= #{} (ai/winning-moves board :o))))))
+  (testing "one winning move"
+    (let [board [[:x :o :e]
+                 [:o :o :e]
+                 [:x :x :o]]]
+        (is (= #{[2 3]} (ai/winning-moves board :o)))))
+  (testing "two winning moves"
+    (let [board [[:e :o :x]
+                 [:o :o :e]
+                 [:x :e :x]]]
+        (is (= #{[2 3] [3 2]} (ai/winning-moves board :x)))))
+  (testing "three winning moves"
+    (let [board [[:x :e :x]
+                 [:e :e :e]
+                 [:x :o :o]]]
+        (is (= #{[1 2] [2 2] [2 1]} (ai/winning-moves board :x))))))

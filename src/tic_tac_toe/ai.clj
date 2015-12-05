@@ -4,7 +4,7 @@
             [tic-tac-toe.game :as game]
             [tic-tac-toe.logic-utils :as lu]
             [clojure.set]))
-4
+
 (defn piece-locations [board piece]
   (->> (flatten board)
        (map-indexed (fn [idx itm]
@@ -24,9 +24,13 @@
 (defn open-locations [board]
   (clojure.set/difference all-locations (occupied-locations board)))
 
-(defn winning-move [board piece]
+(defn winning-moves [board piece]
   (->> (open-locations board)
        (filter #(= piece (game/winner (board/insert board (first %) (second %) piece))))
+       (set)))
+
+(defn winning-move [board piece]
+  (->> (winning-moves board piece)
        (first)))
 
 (def corners 
@@ -67,19 +71,23 @@
        (boolean)))
 
 (defn location-playability-score [board, piece]
-  (fn [location1, location2] 
-    (let [location1-tangentially-aligned? (tangentially-aligned-with-opponent-piece? board piece location1)
+  (fn [[x1 y1 :as location1] [x2 y2 :as location2]] 
+    (let [location1-resulting-winning-moves (winning-moves (board/insert board x1 y1 piece) piece)
+          location2-resulting-winning-moves (winning-moves (board/insert board x2 y2 piece) piece)
+          location1-tangentially-aligned? (tangentially-aligned-with-opponent-piece? board piece location1)
           location2-tangentially-aligned? (tangentially-aligned-with-opponent-piece? board piece location2)
           location1-adjacent? (adjacent-to-played-piece? board piece location1)
           location2-adjacent? (adjacent-to-played-piece? board piece location2)]
       (cond
-       (and (not location1-tangentially-aligned?) location1-adjacent?) -1
-       (and (not location2-tangentially-aligned?) location2-adjacent?) 1
-       (not location1-tangentially-aligned?) -1
-       (not location2-tangentially-aligned?) -1
-       (identity location1-adjacent?) -1
-       (identity location2-adjacent?) 11
-       :else 0))))
+        (> (count location1-resulting-winning-moves) (count location1-resulting-winning-moves)) -1
+        (< (count location1-resulting-winning-moves) (count location2-resulting-winning-moves)) 1
+        (and (not location1-tangentially-aligned?) location1-adjacent?) -1
+        (and (not location2-tangentially-aligned?) location2-adjacent?) 1
+        (not location1-tangentially-aligned?) -1
+        (not location2-tangentially-aligned?) 1
+        (identity location1-adjacent?) -1
+        (identity location2-adjacent?) 1
+        :else 0))))
 
 (defn next-move [board piece]
   (let [my-played (piece-locations board piece)
