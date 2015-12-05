@@ -21,9 +21,11 @@
 (defn occupied-locations [board]
   (clojure.set/union (piece-locations board :o) (piece-locations board :x)))
 
+(defn open-locations [board]
+  (clojure.set/difference all-locations (occupied-locations board)))
+
 (defn winning-move [board piece]
-  (->> (occupied-locations board)
-       (clojure.set/difference all-locations)
+  (->> (open-locations board)
        (filter #(= piece (game/winner (board/insert board (first %) (second %) piece))))
        (first)))
 
@@ -36,7 +38,9 @@
   (first (shuffle corners)))
 
 (defn random-remaining-location [board]
-  (first (clojure.set/difference all-locations (occupied-locations board))))
+  (->> (open-locations board)
+       (shuffle)
+       (first)))
 
 (defn is-1-or-3? [val]
   (lu/or= val 1 3))
@@ -82,7 +86,7 @@
         his-played (piece-locations board (piece/other piece))
         my-winning-move (winning-move board piece)
         his-winning-move (winning-move board (piece/other piece))
-        moves (sort (location-playability-score board piece) (clojure.set/difference (set (for [x (range 1 4) y (range 1 4)] (vector x y))) (piece-locations board piece) (piece-locations board (piece/other piece))))]
+        moves (sort (location-playability-score board piece) (open-locations board))]
     (cond
      (not (nil? my-winning-move)) my-winning-move
      (not (nil? his-winning-move)) his-winning-move
