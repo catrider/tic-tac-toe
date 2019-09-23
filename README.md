@@ -4,7 +4,7 @@ An interactive tic-tac-toe game that you play agaist the computer
 
 ## Usage
 
-`lein run`
+Run `lein run` from the root project directory
 
 If you don't have lein install, run `brew install lein`, or see [the leiningen documentation](https://leiningen.org)
 
