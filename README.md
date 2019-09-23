@@ -1,10 +1,12 @@
 # tic-tac-toe
 
-A Clojure library designed to ... well, that part is up to you.
+An interactive tic-tac-toe game that you play agaist the computer
 
 ## Usage
 
-FIXME
+`lein run`
+
+If you don't have lein install, run `brew install lein`, or see [the leiningen documentation](https://leiningen.org)
 
 ## License
 
